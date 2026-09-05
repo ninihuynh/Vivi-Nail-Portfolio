@@ -763,6 +763,7 @@
   </div>
 </div>
 
+<script src="gallery-data.js"></script>
 <script>
 (function(){
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -776,17 +777,7 @@
     sunset: 'Sunset', emerald: 'Emerald', red: 'Classic red'
   };
 
-  var designs = [
-    { id:1, title:'Sunset Ombré Fade', family:'sunset', tag:'Ombré · Gel', bg:'linear-gradient(160deg,#F2A65A,#E8794A 55%,#B0193F)' },
-    { id:2, title:'Milk Bath Ombré with Floral Accent', family:'nude', tag:'Ombré · Hand-painted accent', img:'photos/milk-bath-floral-accent.jpg' },
-    { id:3, title:'Mirror Chrome', family:'chrome', tag:'Chrome powder', bg:'linear-gradient(160deg,#EDEBEF,#ABA6AE 55%,#7A7681)' },
-    { id:4, title:'Emerald Marble', family:'emerald', tag:'Hand-painted', bg:'linear-gradient(160deg,#2E8367,#1F5C4A 60%,#123B30)' },
-    { id:5, title:'Berry Swirl', family:'berry', tag:'Swirl art', bg:'linear-gradient(160deg,#9A3F68,#7A2048 55%,#4A1129)' },
-    { id:6, title:'Classic Lacquer Red', family:'red', tag:'Glossy gel', bg:'linear-gradient(160deg,#D6335A,#B0193F 60%,#75082A)' },
-    { id:7, title:'Nude Cat-Eye', family:'nude', tag:'Cat-eye', bg:'linear-gradient(160deg,#E7CBB2,#C99A75)' },
-    { id:8, title:'Lilac Chrome Fade', family:'chrome', tag:'Chrome · Ombré', bg:'linear-gradient(160deg,#D9C9E0,#ABA6AE 55%,#8B7F97)' },
-    { id:9, title:'Deep Berry Ombré', family:'berry', tag:'Ombré', bg:'linear-gradient(160deg,#B0577E,#7A2048 60%,#39101F)' }
-  ];
+  // `designs` comes from gallery-data.js, loaded before this script runs.
 
   var services = [
     { id:'s1', name:'Classic Manicure', desc:'Shape, cuticle care, and polish of your choice.', duration:'40 min', price:35 },
