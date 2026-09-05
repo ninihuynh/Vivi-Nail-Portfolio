@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add a photo — Vivi Nails</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF3F0; --surface:#FFFFFF; --ink:#241318; --ink-soft:#6b5760;
+    --line:#E6D6D2; --accent:#B0193F; --accent-deep:#75082A;
+    --nude:#C99A75; --berry:#7A2048; --chrome:#8B8591; --sunset:#E8794A; --emerald:#1F5C4A; --red:#B0193F;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; line-height:1.6;
+    padding: 40px 20px 80px;
+  }
+  .wrap{ max-width: 640px; margin:0 auto; }
+  h1{ font-family:'Fraunces',serif; font-size:1.8rem; margin: 0 0 6px; }
+  .sub{ color:var(--ink-soft); margin: 0 0 32px; font-size: 0.95rem; }
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding: 26px; margin-bottom: 22px;
+  }
+  .step-label{
+    display:inline-block; background: var(--ink); color: var(--paper);
+    font-size: 0.75rem; font-weight:600; padding: 3px 9px; border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  label{ display:block; font-size:0.85rem; font-weight:600; margin: 16px 0 6px; }
+  label:first-of-type{ margin-top:0; }
+  input[type=text], select, textarea{
+    width:100%; padding: 11px 13px; border:1px solid var(--line); border-radius:6px;
+    font-family:inherit; font-size:0.95rem; background:var(--paper); color: var(--ink);
+  }
+  input[type=file]{
+    width:100%; padding: 12px; border:2px dashed var(--line); border-radius:8px;
+    background: var(--paper); font-size: 0.9rem;
+  }
+  .hint{ color:var(--ink-soft); font-size:0.8rem; margin-top:6px; }
+  .family-swatches{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+  .family-swatches button{
+    display:flex; align-items:center; gap:7px;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink-soft);
+    padding: 7px 13px; border-radius:999px; font-size:0.85rem; font-weight:500; cursor:pointer;
+  }
+  .family-swatches button .dot{ width:10px; height:10px; border-radius:50%; }
+  .family-swatches button.active{ color:#fff; border-color:transparent; }
+  button.primary{
+    width:100%; padding:14px; margin-top:22px; border:none; border-radius:8px;
+    background:var(--accent); color:#fff; font-weight:600; font-size:1rem; cursor:pointer;
+  }
+  button.primary:hover{ background:var(--accent-deep); }
+  button.primary:disabled{ background:var(--line); color:var(--ink-soft); cursor:not-allowed; }
+  .result{ display:none; }
+  .result.show{ display:block; }
+  .preview{
+    display:flex; gap:16px; align-items:flex-start; margin-bottom:18px;
+  }
+  .preview img{ width:110px; height:147px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
+  .preview .meta{ font-size:0.85rem; color:var(--ink-soft); }
+  .preview .meta strong{ color:var(--ink); display:block; margin-bottom:4px; font-size:0.95rem; }
+  .download-btn{
+    display:inline-block; background:var(--ink); color:var(--paper); text-decoration:none;
+    padding:10px 18px; border-radius:6px; font-weight:600; font-size:0.9rem; margin-bottom: 6px;
+  }
+  .download-btn:hover{ background:var(--accent-deep); }
+  code.filename{ background:var(--paper); padding:2px 6px; border-radius:4px; font-size:0.85rem; }
+  textarea.code{
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8rem; white-space: pre; background: var(--ink); color: #F3E7EA;
+    border: none; border-radius: 8px; padding: 16px; height: 70px; resize: none;
+  }
+  .copy-btn{
+    margin-top:10px; background:none; border:1px solid var(--line); color:var(--ink);
+    padding:9px 16px; border-radius:6px; font-weight:600; font-size:0.85rem; cursor:pointer;
+  }
+  .copy-btn:hover{ background:var(--paper); }
+  .copy-btn.copied{ background:var(--emerald); color:#fff; border-color:transparent; }
+  ol{ padding-left: 20px; color: var(--ink-soft); font-size: 0.9rem; }
+  ol li{ margin-bottom: 6px; }
+  ol li strong{ color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Add a photo to the gallery</h1>
+  <p class="sub">Fill this in, then follow the two steps it gives you. This runs entirely in your browser — nothing is uploaded anywhere.</p>
+
+  <div class="card">
+    <span class="step-label">Fill in</span>
+
+    <label for="photoFile">Photo</label>
+    <input type="file" id="photoFile" accept="image/*">
+    <p class="hint">Pick the sharpest, most front-on shot of the set. Phone photos work fine — this will resize it and remove any location/device data automatically.</p>
+
+    <label for="titleInput">Title</label>
+    <input type="text" id="titleInput" placeholder="e.g. Chrome Cat-Eye Set">
+
+    <label>Shade family</label>
+    <div class="family-swatches" id="familySwatches"></div>
+
+    <label for="tagInput">Short tag (optional)</label>
+    <input type="text" id="tagInput" placeholder="e.g. Chrome powder · Cat-eye">
+
+    <button class="primary" id="generateBtn" disabled>Generate</button>
+  </div>
+
+  <div class="card result" id="resultCard">
+    <span class="step-label">Result</span>
+    <div class="preview">
+      <img id="previewImg" alt="">
+      <div class="meta" id="previewMeta"></div>
+    </div>
+
+    <ol>
+      <li><strong>Download the photo</strong> below and drop it into your site's <code>photos/</code> folder.</li>
+      <li><strong>Copy the line of code</strong> below and paste it into <code>gallery-data.js</code>, anywhere inside the <code>designs = [ ... ]</code> list.</li>
+    </ol>
+
+    <a class="download-btn" id="downloadLink" download>Download photo</a>
+    <p class="hint">Saves as <code class="filename" id="filenamePreview"></code></p>
+
+    <label style="margin-top:20px;">Line to paste into gallery-data.js</label>
+    <textarea class="code" id="codeOutput" readonly></textarea>
+    <button class="copy-btn" id="copyBtn">Copy line</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var familyColors = {
+    nude:'#C99A75', berry:'#7A2048', chrome:'#8B8591',
+    sunset:'#E8794A', emerald:'#1F5C4A', red:'#B0193F'
+  };
+  var familyLabels = {
+    nude:'Nude', berry:'Berry', chrome:'Chrome',
+    sunset:'Sunset', emerald:'Emerald', red:'Classic red'
+  };
+  var selectedFamily = 'nude';
+
+  var swatchWrap = document.getElementById('familySwatches');
+  Object.keys(familyColors).forEach(function(fam){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.family = fam;
+    btn.innerHTML = '<span class="dot" style="background:' + familyColors[fam] + '"></span>' + familyLabels[fam];
+    if(fam === selectedFamily){ btn.classList.add('active'); btn.style.background = familyColors[fam]; }
+    btn.addEventListener('click', function(){
+      selectedFamily = fam;
+      Array.prototype.forEach.call(swatchWrap.children, function(b){
+        var active = b.dataset.family === fam;
+        b.classList.toggle('active', active);
+        b.style.background = active ? familyColors[b.dataset.family] : '';
+      });
+    });
+    swatchWrap.appendChild(btn);
+  });
+
+  var fileInput = document.getElementById('photoFile');
+  var titleInput = document.getElementById('titleInput');
+  var tagInput = document.getElementById('tagInput');
+  var generateBtn = document.getElementById('generateBtn');
+
+  function updateGenerateState(){
+    generateBtn.disabled = !(fileInput.files[0] && titleInput.value.trim());
+  }
+  fileInput.addEventListener('change', updateGenerateState);
+  titleInput.addEventListener('input', updateGenerateState);
+
+  function slugify(str){
+    return str.toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60);
+  }
+
+  generateBtn.addEventListener('click', function(){
+    var file = fileInput.files[0];
+    if(!file) return;
+    generateBtn.disabled = true;
+    generateBtn.textContent = 'Processing…';
+
+    var processImage = (window.createImageBitmap)
+      ? createImageBitmap(file, { imageOrientation: 'from-image' })
+      : new Promise(function(resolve){
+          var img = new Image();
+          img.onload = function(){ resolve(img); };
+          img.src = URL.createObjectURL(file);
+        });
+
+    processImage.then(function(bitmap){
+      var maxW = 1600;
+      var w = bitmap.width, h = bitmap.height;
+      if(w > maxW){ h = Math.round(h * (maxW / w)); w = maxW; }
+
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(bitmap, 0, 0, w, h);
+
+      canvas.toBlob(function(blob){
+        var title = titleInput.value.trim();
+        var tag = tagInput.value.trim() || 'Hand-painted';
+        var filename = selectedFamily + '-' + slugify(title) + '.jpg';
+        var url = URL.createObjectURL(blob);
+
+        document.getElementById('previewImg').src = url;
+        document.getElementById('previewMeta').innerHTML =
+          '<strong>' + title + '</strong>' + familyLabels[selectedFamily] + ' · ' + tag +
+          '<br>' + w + '×' + h + 'px, ' + Math.round(blob.size/1024) + ' KB';
+
+        var link = document.getElementById('downloadLink');
+        link.href = url;
+        link.download = filename;
+        document.getElementById('filenamePreview').textContent = 'photos/' + filename;
+
+        var escTitle = title.replace(/'/g, "\\'");
+        var escTag = tag.replace(/'/g, "\\'");
+        var codeLine = "  { id:" + Date.now() + ", title:'" + escTitle + "', family:'" + selectedFamily + "', tag:'" + escTag + "', img:'photos/" + filename + "' },";
+        document.getElementById('codeOutput').value = codeLine;
+
+        document.getElementById('resultCard').classList.add('show');
+        document.getElementById('resultCard').scrollIntoView({ behavior:'smooth', block:'start' });
+
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generate';
+      }, 'image/jpeg', 0.82);
+    });
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    var ta = document.getElementById('codeOutput');
+    ta.select();
+    document.execCommand('copy');
+    this.textContent = 'Copied!';
+    this.classList.add('copied');
+    var btn = this;
+    setTimeout(function(){ btn.textContent = 'Copy line'; btn.classList.remove('copied'); }, 1500);
+  });
+})();
+</script>
+</body>
+</html>
